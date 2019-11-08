@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="LibraryFastDecisions">
+      <HintPath>..\..\GB-CSharp-Level1-Lesson_6\1_PresentationFuncDelegates\Properties\LibraryFastDecisions.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
