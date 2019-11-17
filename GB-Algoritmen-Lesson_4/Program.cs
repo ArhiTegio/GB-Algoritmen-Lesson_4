@@ -49,4 +49,49 @@ namespace GB_Algoritmen_Lesson_4
     {
         public abstract void Work();
     }
+
+    class Horse : Act
+    {
+        Dictionary<Point, Field> fields;
+
+
+        public override void Work()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void GetFieldForHorse(int N, int M)
+        {
+            for (int n = 0; n < N; ++n)
+                for (int m = 0; m < M; ++m)
+                {
+
+                    fields.Add(new Point(n, m), new Field());
+                }
+        }
+    }
+
+    class Field
+    {
+        List<Point> points;
+        bool get;
+
+        public bool Get { get => get; set => get = value; }
+        internal List<Point> Points { get => points; set => points = value; }
+    }
+
+    class Point
+    {
+        int x;
+        int y;
+
+        public Point(int x, int y)
+        {
+            X = x;
+            Y = y;
+        }
+
+        public int X { get => x; set => x = value; }
+        public int Y { get => y; set => y = value; }
+    }
 }
