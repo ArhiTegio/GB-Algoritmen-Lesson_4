@@ -110,9 +110,17 @@ namespace GB_Algoritmen_Lesson_4
 
     class Matrix : Act
     {
+        Stack<Point> stack;
+        int[] sequence1;
+        int[] sequence2;
+        int[,] matrix;
         public override void Work()
         {
-            throw new NotImplementedException();
+            sequence1 = new int[] { 1, 5, 2, 4, 9, 7, 8 };
+            sequence2 = new int[] { 1, 5, 3, 2, 5, 6, 9, 7, };
+            matrix = new int[sequence1.Length + 1, sequence2.Length + 1];
+            stack = new Stack<Point>();
+            stack.Push(new Point(1, 1));
         }
     }
 
