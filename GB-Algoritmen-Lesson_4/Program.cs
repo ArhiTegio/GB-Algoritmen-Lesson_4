@@ -35,10 +35,10 @@ namespace GB_Algoritmen_Lesson_4
                     "       0 1 0" + Environment.NewLine +
                     "       0 1 0" + Environment.NewLine +
                     "2.Решить задачу о нахождении длины максимальной подпоследовательности с помощью матрицы." + Environment.NewLine +
-                    "3. * **Требуется обойти конём шахматную доску размером N × M, пройдя через все поля доски по одному разу.Здесь алгоритм решения такой же, как и в задаче о 8 ферзях.Разница только в проверке положения коня." + Environment.NewLine +
+                    "3. * **Требуется обойти конём шахматную доску размером N x M, пройдя через все поля доски по одному разу.Здесь алгоритм решения такой же, как и в задаче о 8 ферзях.Разница только в проверке положения коня." + Environment.NewLine +
                     "0. Нажмите для выхода из программы.");
 
-                n = q.Question<int>("Введите ", new HashSet<char>() { '0', '1', '3', }, true);
+                n = q.Question<int>("Введите ", new HashSet<char>() { '0', '1', '2', '3', }, true);
                 if (n == "0") break;
                 dict[n].Work();
             }
@@ -114,15 +114,130 @@ namespace GB_Algoritmen_Lesson_4
         int[] sequence1;
         int[] sequence2;
         int[,] matrix;
+        List<Point> list;
+        int posY;
+
         public override void Work()
         {
-            sequence1 = new int[] { 1, 5, 2, 4, 9, 7, 8 };
-            sequence2 = new int[] { 1, 5, 3, 2, 5, 6, 9, 7, };
+            sequence1 = new int[] { 1, 5, 3, 2, 5, 6, 9, 7, };
+            sequence2 = new int[] { 1, 5, 2, 4, 9, 7, 8 };
             matrix = new int[sequence1.Length + 1, sequence2.Length + 1];
             stack = new Stack<Point>();
+            list = new List<Point>();
             stack.Push(new Point(1, 1));
+            FoundInMatrix();
+            FillingMatrix();
+
+            for (int j = 0; j < sequence1.Length; ++j)
+                Write($"{sequence1[j]} ");
+            Write($"{Environment.NewLine}");
+
+            for (int i = 0; i < matrix.GetLength(0); ++i)
+            {
+                for (int j = 0; j < matrix.GetLength(1); ++j)                
+                    Write($"{matrix[i, j]} ");
+                
+                Write($"{Environment.NewLine}");
+            }
         }
+
+        private void FillingMatrix()
+        {
+            var x = 0;
+            var y = 0;
+            var e = new Point(0, 0);
+            var oldPoint = new Point(0, 0);
+            var st = new Queue<Point>();
+
+            foreach (var f in list)
+                st.Enqueue(f);
+
+            while(st.Count != 0)
+            {
+                e = st.Dequeue();
+                x = e.X;
+                y = e.Y;
+
+
+                while (true)
+                {
+                    x++;
+                    if (x < matrix.GetLength(0))
+                    {
+                        if (matrix[x, y] != 0)
+                            break;
+                        else
+                            matrix[x, y] = matrix[e.X, e.Y];
+                    }
+                    else
+                        break;
+                }
+
+                x = e.X;
+                y = e.Y;
+                while (true)
+                {
+                    y++;
+                    if (y < matrix.GetLength(1))
+                    {
+                        if (matrix[x, y] != 0)
+                            break;
+                        else
+                            matrix[x, y] = matrix[e.X, e.Y];
+                    }
+                    else
+                        break;
+                }
+
+
+                if (oldPoint.X + 1 != e.X)                
+                    for (int x1 = oldPoint.X; x1 < e.X; ++x1)                    
+                        st.Enqueue(new Point(x1, e.Y));
+                                    
+                if (oldPoint.Y + 1 != e.Y)
+                    for (int y1 = oldPoint.Y; y1 < e.Y; ++y1)                    
+                        st.Enqueue(new Point(e.X, y1));
+                
+                oldPoint = e;
+            }
+        }
+
+        private void FoundInMatrix()
+        {
+            var newPoint = new Point(0, 0);
+            while (stack.Count != 0)
+            {
+                newPoint = stack.Pop();
+
+                if (newPoint.X < matrix.GetLength(0) && newPoint.Y < matrix.GetLength(1) &&
+                    sequence1[newPoint.X - 1] == sequence2[newPoint.Y - 1])
+                {
+                    list.Add(new Point(newPoint.X, newPoint.Y));
+                    posY = newPoint.Y;
+                    if (newPoint.X < matrix.GetLength(0) && newPoint.Y < matrix.GetLength(1))
+                    {
+                        matrix[newPoint.X, newPoint.Y] = list.Count;
+                        stack.Push(new Point(newPoint.X + 1, newPoint.Y + 1));
+                    }
+                    else
+                        break;
+                }
+                else if (newPoint.Y < matrix.GetLength(1))
+                {
+                    stack.Push(new Point(newPoint.X, newPoint.Y + 1));
+                }
+                else if (newPoint.X < matrix.GetLength(0))
+                {
+                    stack.Push(new Point(newPoint.X + 1, posY));
+                }
+                else
+                    break;
+            }
+
+        }
+
     }
+
 
 
     class Horse : Act
